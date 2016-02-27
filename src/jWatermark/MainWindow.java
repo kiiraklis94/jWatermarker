@@ -336,6 +336,12 @@ public class MainWindow {
 	}
 	
 	public void applyButtonPressed(){
+		String[] inputs =  inputTextArea.getText().split("\\n");
+		
+		String watermark = watermarkTextField.getText();
+		
+		String output = outputTextField.getText();
+		
 		
 		
 	}
