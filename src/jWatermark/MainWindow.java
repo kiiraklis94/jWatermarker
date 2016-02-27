@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
@@ -12,15 +14,21 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JTextArea;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 
 public class MainWindow {
 
 	private JFrame frmJwatermark;
-	private JTextField inputTextField;
+	private JTextArea inputTextArea;
 	private JTextField watermarkTextField;
 	private JTextField outputTextField;
 
@@ -57,19 +65,20 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		
-		String[] watermarkPositionCombo = {"Top-Left", "Top-Center", "Top-Right", "Middle-Left", "Middle-Center", "Middle-Right"};
+		String[] watermarkPositionCombo = {"Top-Left", "Top-Center", "Top-Right", "Middle-Left", "Middle-Center", "Middle-Right", "Bottom-Left", "Bottom-Center", 
+				"Bottom-Right"};
 		
 		frmJwatermark = new JFrame();
 		frmJwatermark.setTitle("jWaterMark");
-		frmJwatermark.setBounds(100, 100, 548, 504);
+		frmJwatermark.setBounds(100, 100, 418, 500);
 		frmJwatermark.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmJwatermark.setMinimumSize(new Dimension(250, 500));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {0, 0, 0};
-		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmJwatermark.getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblInputPicturesFolder = new JLabel("Input Pictures Folder:");
@@ -80,25 +89,47 @@ public class MainWindow {
 		gbc_lblInputPicturesFolder.gridx = 0;
 		gbc_lblInputPicturesFolder.gridy = 0;
 		frmJwatermark.getContentPane().add(lblInputPicturesFolder, gbc_lblInputPicturesFolder);
+
+		inputTextArea = new JTextArea();
+		lblInputPicturesFolder.setLabelFor(inputTextArea);
+		GridBagConstraints gbc_inputTextArea = new GridBagConstraints();
+		gbc_inputTextArea.anchor = GridBagConstraints.NORTH;
+		gbc_inputTextArea.fill = GridBagConstraints.BOTH;
+		gbc_inputTextArea.insets = new Insets(0, 5, 5, 5);
+		gbc_inputTextArea.gridx = 0;
+		gbc_inputTextArea.gridy = 1;
 		
-		inputTextField = new JTextField();
-		lblInputPicturesFolder.setLabelFor(inputTextField);
-		GridBagConstraints gbc_inputTextField = new GridBagConstraints();
-		gbc_inputTextField.anchor = GridBagConstraints.NORTH;
-		gbc_inputTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputTextField.insets = new Insets(0, 5, 5, 5);
-		gbc_inputTextField.gridx = 0;
-		gbc_inputTextField.gridy = 1;
-		frmJwatermark.getContentPane().add(inputTextField, gbc_inputTextField);
-		inputTextField.setColumns(10);
+		JScrollPane scrollPane = new JScrollPane(inputTextArea);
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.anchor = GridBagConstraints.NORTH;
+		gbc_scrollPane.insets = new Insets(0, 5, 5, 5);
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 1;
+		frmJwatermark.getContentPane().add(scrollPane, gbc_scrollPane);
 		
-		JButton btnNewButton = new JButton("Browse...");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 1;
-		frmJwatermark.getContentPane().add(btnNewButton, gbc_btnNewButton);
+		JButton inputBrowseButton = new JButton("Browse...");
+		inputBrowseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputBrowsePressed();				
+			}
+		});
+		GridBagConstraints gbc_inputBrowseButton = new GridBagConstraints();
+		gbc_inputBrowseButton.fill = GridBagConstraints.BOTH;
+		gbc_inputBrowseButton.anchor = GridBagConstraints.NORTH;
+		gbc_inputBrowseButton.insets = new Insets(0, 0, 5, 5);
+		gbc_inputBrowseButton.gridx = 1;
+		gbc_inputBrowseButton.gridy = 1;
+		frmJwatermark.getContentPane().add(inputBrowseButton, gbc_inputBrowseButton);
+		
+		JSeparator separator = new JSeparator();
+		GridBagConstraints gbc_separator = new GridBagConstraints();
+		gbc_separator.gridwidth = 2;
+		gbc_separator.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator.insets = new Insets(0, 0, 5, 0);
+		gbc_separator.gridx = 0;
+		gbc_separator.gridy = 2;
+		frmJwatermark.getContentPane().add(separator, gbc_separator);
 		
 		JLabel lblNewLabel = new JLabel("Watermark Picture Location:");
 		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -106,7 +137,7 @@ public class MainWindow {
 		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel.insets = new Insets(0, 5, 5, 5);
 		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 2;
+		gbc_lblNewLabel.gridy = 3;
 		frmJwatermark.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
 		
 		watermarkTextField = new JTextField();
@@ -116,21 +147,31 @@ public class MainWindow {
 		gbc_watermarkTextField.insets = new Insets(0, 5, 5, 5);
 		gbc_watermarkTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_watermarkTextField.gridx = 0;
-		gbc_watermarkTextField.gridy = 3;
+		gbc_watermarkTextField.gridy = 4;
 		frmJwatermark.getContentPane().add(watermarkTextField, gbc_watermarkTextField);
 		watermarkTextField.setColumns(10);
 		
-		JButton btnBrowse = new JButton("Browse...");
-		btnBrowse.addActionListener(new ActionListener() {
+		JButton watermarkBrowseButton = new JButton("Browse...");
+		watermarkBrowseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				watermarkBrowsePressed();
 			}
 		});
-		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
-		gbc_btnBrowse.anchor = GridBagConstraints.NORTH;
-		gbc_btnBrowse.insets = new Insets(0, 0, 5, 5);
-		gbc_btnBrowse.gridx = 1;
-		gbc_btnBrowse.gridy = 3;
-		frmJwatermark.getContentPane().add(btnBrowse, gbc_btnBrowse);
+		GridBagConstraints gbc_watermarkBrowseButton = new GridBagConstraints();
+		gbc_watermarkBrowseButton.anchor = GridBagConstraints.NORTH;
+		gbc_watermarkBrowseButton.insets = new Insets(0, 0, 5, 5);
+		gbc_watermarkBrowseButton.gridx = 1;
+		gbc_watermarkBrowseButton.gridy = 4;
+		frmJwatermark.getContentPane().add(watermarkBrowseButton, gbc_watermarkBrowseButton);
+		
+		JSeparator separator_1 = new JSeparator();
+		GridBagConstraints gbc_separator_1 = new GridBagConstraints();
+		gbc_separator_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator_1.gridwidth = 2;
+		gbc_separator_1.insets = new Insets(0, 0, 5, 0);
+		gbc_separator_1.gridx = 0;
+		gbc_separator_1.gridy = 5;
+		frmJwatermark.getContentPane().add(separator_1, gbc_separator_1);
 		
 		JLabel lblOutputFolder = new JLabel("Output Folder:");
 		lblOutputFolder.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -138,7 +179,7 @@ public class MainWindow {
 		gbc_lblOutputFolder.fill = GridBagConstraints.BOTH;
 		gbc_lblOutputFolder.insets = new Insets(0, 5, 5, 5);
 		gbc_lblOutputFolder.gridx = 0;
-		gbc_lblOutputFolder.gridy = 4;
+		gbc_lblOutputFolder.gridy = 6;
 		frmJwatermark.getContentPane().add(lblOutputFolder, gbc_lblOutputFolder);
 		
 		outputTextField = new JTextField();
@@ -148,44 +189,62 @@ public class MainWindow {
 		gbc_outputTextField.insets = new Insets(0, 5, 5, 5);
 		gbc_outputTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_outputTextField.gridx = 0;
-		gbc_outputTextField.gridy = 5;
+		gbc_outputTextField.gridy = 7;
 		frmJwatermark.getContentPane().add(outputTextField, gbc_outputTextField);
 		outputTextField.setColumns(10);
 		
-		JButton btnBrowse_1 = new JButton("Browse...");
-		btnBrowse_1.addActionListener(new ActionListener() {
+		JButton outputBrowseButton = new JButton("Browse...");
+		outputBrowseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		GridBagConstraints gbc_btnBrowse_1 = new GridBagConstraints();
-		gbc_btnBrowse_1.anchor = GridBagConstraints.NORTH;
-		gbc_btnBrowse_1.insets = new Insets(0, 0, 5, 5);
-		gbc_btnBrowse_1.gridx = 1;
-		gbc_btnBrowse_1.gridy = 5;
-		frmJwatermark.getContentPane().add(btnBrowse_1, gbc_btnBrowse_1);
+		GridBagConstraints gbc_outputBrowseButton = new GridBagConstraints();
+		gbc_outputBrowseButton.anchor = GridBagConstraints.NORTH;
+		gbc_outputBrowseButton.insets = new Insets(0, 0, 5, 5);
+		gbc_outputBrowseButton.gridx = 1;
+		gbc_outputBrowseButton.gridy = 7;
+		frmJwatermark.getContentPane().add(outputBrowseButton, gbc_outputBrowseButton);
+		
+		JSeparator separator_2 = new JSeparator();
+		GridBagConstraints gbc_separator_2 = new GridBagConstraints();
+		gbc_separator_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator_2.gridwidth = 2;
+		gbc_separator_2.insets = new Insets(0, 0, 5, 0);
+		gbc_separator_2.gridx = 0;
+		gbc_separator_2.gridy = 8;
+		frmJwatermark.getContentPane().add(separator_2, gbc_separator_2);
 		
 		JLabel lblOpacity = new JLabel("Opacity:");
 		GridBagConstraints gbc_lblOpacity = new GridBagConstraints();
 		gbc_lblOpacity.fill = GridBagConstraints.BOTH;
 		gbc_lblOpacity.insets = new Insets(0, 5, 5, 5);
 		gbc_lblOpacity.gridx = 0;
-		gbc_lblOpacity.gridy = 6;
+		gbc_lblOpacity.gridy = 9;
 		frmJwatermark.getContentPane().add(lblOpacity, gbc_lblOpacity);
 		
 		JSlider opacitySlider = new JSlider(SwingConstants.HORIZONTAL);
-		opacitySlider.setValue(80);
 		opacitySlider.setPaintLabels(true);
 		opacitySlider.setPaintTicks(true);
+		opacitySlider.setValue(80);
 		lblOpacity.setLabelFor(opacitySlider);
 		GridBagConstraints gbc_opacitySlider = new GridBagConstraints();
 		gbc_opacitySlider.gridwidth = 2;
 		gbc_opacitySlider.anchor = GridBagConstraints.NORTH;
 		gbc_opacitySlider.fill = GridBagConstraints.HORIZONTAL;
-		gbc_opacitySlider.insets = new Insets(0, 0, 5, 5);
+		gbc_opacitySlider.insets = new Insets(0, 0, 5, 0);
 		gbc_opacitySlider.gridx = 0;
-		gbc_opacitySlider.gridy = 7;
+		gbc_opacitySlider.gridy = 10;
 		opacitySlider.setMajorTickSpacing(10);
 		frmJwatermark.getContentPane().add(opacitySlider, gbc_opacitySlider);
+		
+		JSeparator separator_3 = new JSeparator();
+		GridBagConstraints gbc_separator_3 = new GridBagConstraints();
+		gbc_separator_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator_3.gridwidth = 2;
+		gbc_separator_3.insets = new Insets(0, 0, 5, 0);
+		gbc_separator_3.gridx = 0;
+		gbc_separator_3.gridy = 11;
+		frmJwatermark.getContentPane().add(separator_3, gbc_separator_3);
 		
 		JLabel lblWatermarkLocation = new JLabel("Watermark Position:");
 		GridBagConstraints gbc_lblWatermarkLocation = new GridBagConstraints();
@@ -193,27 +252,67 @@ public class MainWindow {
 		gbc_lblWatermarkLocation.anchor = GridBagConstraints.WEST;
 		gbc_lblWatermarkLocation.insets = new Insets(0, 5, 5, 5);
 		gbc_lblWatermarkLocation.gridx = 0;
-		gbc_lblWatermarkLocation.gridy = 8;
+		gbc_lblWatermarkLocation.gridy = 12;
 		frmJwatermark.getContentPane().add(lblWatermarkLocation, gbc_lblWatermarkLocation);
 		
-		JComboBox<Object> comboBox = new JComboBox<Object>(watermarkPositionCombo);
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.anchor = GridBagConstraints.NORTH;
-		gbc_comboBox.gridwidth = 2;
-		gbc_comboBox.insets = new Insets(0, 5, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 0;
-		gbc_comboBox.gridy = 9;
-		frmJwatermark.getContentPane().add(comboBox, gbc_comboBox);
+		JComboBox<Object> watermarkPosComboBox = new JComboBox<Object>(watermarkPositionCombo);
+		GridBagConstraints gbc_watermarkPosComboBox = new GridBagConstraints();
+		gbc_watermarkPosComboBox.anchor = GridBagConstraints.NORTH;
+		gbc_watermarkPosComboBox.gridwidth = 2;
+		gbc_watermarkPosComboBox.insets = new Insets(0, 5, 5, 0);
+		gbc_watermarkPosComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_watermarkPosComboBox.gridx = 0;
+		gbc_watermarkPosComboBox.gridy = 13;
+		frmJwatermark.getContentPane().add(watermarkPosComboBox, gbc_watermarkPosComboBox);
 		
-		JButton btnNewButton_1 = new JButton("Apply");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.fill = GridBagConstraints.BOTH;
-		gbc_btnNewButton_1.gridwidth = 2;
-		gbc_btnNewButton_1.insets = new Insets(5, 5, 0, 5);
-		gbc_btnNewButton_1.gridx = 0;
-		gbc_btnNewButton_1.gridy = 10;
-		frmJwatermark.getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
+		JSeparator separator_4 = new JSeparator();
+		GridBagConstraints gbc_separator_4 = new GridBagConstraints();
+		gbc_separator_4.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator_4.gridwidth = 2;
+		gbc_separator_4.insets = new Insets(0, 0, 5, 5);
+		gbc_separator_4.gridx = 0;
+		gbc_separator_4.gridy = 14;
+		frmJwatermark.getContentPane().add(separator_4, gbc_separator_4);
+		
+		JButton applyButton = new JButton("Apply");
+		GridBagConstraints gbc_applyButton = new GridBagConstraints();
+		gbc_applyButton.fill = GridBagConstraints.BOTH;
+		gbc_applyButton.gridwidth = 2;
+		gbc_applyButton.insets = new Insets(5, 5, 5, 5);
+		gbc_applyButton.gridx = 0;
+		gbc_applyButton.gridy = 15;
+		frmJwatermark.getContentPane().add(applyButton, gbc_applyButton);
+	}
+	
+	public void inputBrowsePressed(){
+		
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fc.setMultiSelectionEnabled(true);
+		
+		int returnVal = fc.showOpenDialog(null);
+		
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File[] file = fc.getSelectedFiles();
+			
+				for(int i=0;i<=file.length;i++){
+					inputTextArea.setText(file[i].getPath());
+				}
+		}
 	}
 
+	public void watermarkBrowsePressed(){
+		
+		final JFileChooser fc = new JFileChooser();
+		int returnVal = fc.showOpenDialog(null);
+		
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			watermarkTextField.setText(file.getPath());	
+		}
+	}
+	
+	
+	
+	
 }
