@@ -278,6 +278,11 @@ public class MainWindow {
 		frmJwatermark.getContentPane().add(separator_4, gbc_separator_4);
 		
 		JButton applyButton = new JButton("Apply");
+		applyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				applyButtonPressed();
+			}
+		});
 		GridBagConstraints gbc_applyButton = new GridBagConstraints();
 		gbc_applyButton.fill = GridBagConstraints.BOTH;
 		gbc_applyButton.gridwidth = 2;
@@ -327,6 +332,11 @@ public class MainWindow {
 			File file = fc.getSelectedFile();
 			outputTextField.setText(file.getPath());	
 		}
+		
+	}
+	
+	public void applyButtonPressed(){
+		
 		
 	}
 	
