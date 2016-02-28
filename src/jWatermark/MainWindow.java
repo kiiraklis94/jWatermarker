@@ -30,6 +30,8 @@ public class MainWindow {
 	private JTextArea inputTextArea;
 	private JTextField watermarkTextField;
 	private JTextField outputTextField;
+	private JComboBox watermarkPosComboBox;
+	private JSlider opacitySlider;
 
 	/**
 	 * Launch the application.
@@ -225,7 +227,7 @@ public class MainWindow {
 		gbc_lblOpacity.gridy = 9;
 		frmJwatermark.getContentPane().add(lblOpacity, gbc_lblOpacity);
 		
-		JSlider opacitySlider = new JSlider(SwingConstants.HORIZONTAL);
+		opacitySlider = new JSlider(SwingConstants.HORIZONTAL);
 		opacitySlider.setPaintLabels(true);
 		opacitySlider.setPaintTicks(true);
 		opacitySlider.setValue(80);
@@ -258,7 +260,7 @@ public class MainWindow {
 		gbc_lblWatermarkLocation.gridy = 12;
 		frmJwatermark.getContentPane().add(lblWatermarkLocation, gbc_lblWatermarkLocation);
 		
-		JComboBox<Object> watermarkPosComboBox = new JComboBox<Object>(watermarkPositionCombo);
+		watermarkPosComboBox = new JComboBox<Object>(watermarkPositionCombo);
 		GridBagConstraints gbc_watermarkPosComboBox = new GridBagConstraints();
 		gbc_watermarkPosComboBox.anchor = GridBagConstraints.NORTH;
 		gbc_watermarkPosComboBox.gridwidth = 2;
@@ -342,7 +344,11 @@ public class MainWindow {
 		
 		String output = outputTextField.getText();
 		
+		String position = (String) watermarkPosComboBox.getSelectedItem();
 		
+		int oppasity = opacitySlider.getValue();
+		
+//		System.out.println(position +","+ oppasity);
 		
 	}
 	
