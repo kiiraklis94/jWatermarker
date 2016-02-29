@@ -87,7 +87,7 @@ public class MainWindow {
 		gridBagLayout.columnWidths = new int[] {0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmJwatermark.getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblInputPicturesFolder = new JLabel("Input Pictures:");
@@ -153,11 +153,11 @@ public class MainWindow {
 		frmJwatermark.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
 		
 		watermarkTextField = new JTextField();
+		watermarkTextField.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblNewLabel.setLabelFor(watermarkTextField);
 		GridBagConstraints gbc_watermarkTextField = new GridBagConstraints();
-		gbc_watermarkTextField.anchor = GridBagConstraints.NORTH;
 		gbc_watermarkTextField.insets = new Insets(0, 5, 5, 5);
-		gbc_watermarkTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_watermarkTextField.fill = GridBagConstraints.BOTH;
 		gbc_watermarkTextField.gridx = 0;
 		gbc_watermarkTextField.gridy = 4;
 		frmJwatermark.getContentPane().add(watermarkTextField, gbc_watermarkTextField);
@@ -170,7 +170,7 @@ public class MainWindow {
 			}
 		});
 		GridBagConstraints gbc_watermarkBrowseButton = new GridBagConstraints();
-		gbc_watermarkBrowseButton.anchor = GridBagConstraints.NORTH;
+		gbc_watermarkBrowseButton.fill = GridBagConstraints.VERTICAL;
 		gbc_watermarkBrowseButton.insets = new Insets(0, 0, 5, 5);
 		gbc_watermarkBrowseButton.gridx = 1;
 		gbc_watermarkBrowseButton.gridy = 4;
@@ -195,11 +195,11 @@ public class MainWindow {
 		frmJwatermark.getContentPane().add(lblOutputFolder, gbc_lblOutputFolder);
 		
 		outputTextField = new JTextField();
+		outputTextField.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblOutputFolder.setLabelFor(outputTextField);
 		GridBagConstraints gbc_outputTextField = new GridBagConstraints();
-		gbc_outputTextField.anchor = GridBagConstraints.NORTH;
 		gbc_outputTextField.insets = new Insets(0, 5, 5, 5);
-		gbc_outputTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_outputTextField.fill = GridBagConstraints.BOTH;
 		gbc_outputTextField.gridx = 0;
 		gbc_outputTextField.gridy = 7;
 		frmJwatermark.getContentPane().add(outputTextField, gbc_outputTextField);
@@ -212,7 +212,7 @@ public class MainWindow {
 			}
 		});
 		GridBagConstraints gbc_outputBrowseButton = new GridBagConstraints();
-		gbc_outputBrowseButton.anchor = GridBagConstraints.NORTH;
+		gbc_outputBrowseButton.fill = GridBagConstraints.VERTICAL;
 		gbc_outputBrowseButton.insets = new Insets(0, 0, 5, 5);
 		gbc_outputBrowseButton.gridx = 1;
 		gbc_outputBrowseButton.gridy = 7;
