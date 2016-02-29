@@ -36,6 +36,7 @@ public class MainWindow {
 	private JTextArea inputTextArea;
 	private JTextField watermarkTextField;
 	private JTextField outputTextField;
+	@SuppressWarnings("rawtypes")
 	private JComboBox watermarkPosComboBox;
 	private JSlider opacitySlider;
 	private File[] inputFiles;
@@ -184,7 +185,7 @@ public class MainWindow {
 		gbc_separator_1.gridy = 5;
 		frmJwatermark.getContentPane().add(separator_1, gbc_separator_1);
 		
-		JLabel lblOutputFolder = new JLabel("Save as:");
+		JLabel lblOutputFolder = new JLabel("Save to:");
 		lblOutputFolder.setVerticalAlignment(SwingConstants.BOTTOM);
 		GridBagConstraints gbc_lblOutputFolder = new GridBagConstraints();
 		gbc_lblOutputFolder.fill = GridBagConstraints.BOTH;
@@ -373,7 +374,7 @@ public class MainWindow {
 			
 			File inputFile = inputFiles[i];
 			
-			File outputFile = new File(output + "\\" + inputFile.getName().toString().substring(0, inputFile.getName().toString().lastIndexOf('.')) +"_watermarked.png");
+			File outputFile = new File(output + "\\" + inputFile.getName().substring(0, inputFile.getName().toString().lastIndexOf('.')) +"_watermarked.png");
 			
 			addWatermark(watermarkFile, inputFile, outputFile, opacity, position);
 		}
@@ -422,13 +423,16 @@ public class MainWindow {
 	        	topLeftY = (sourceImage.getHeight() - watermarkImage.getHeight()) / 2;
 	        	break;
 	        case "Bottom-Left": 
-	        	
+	        	topLeftX = 10;
+	        	topLeftY = sourceImage.getHeight() - watermarkImage.getHeight() - 10;
 	        	break;
 	        case "Bottom-Center": 
-	        	
+	        	topLeftX = (sourceImage.getWidth() - watermarkImage.getWidth()) / 2;
+	        	topLeftY = sourceImage.getHeight() - watermarkImage.getHeight() - 10;
 	        	break;
 	        case "Bottom-Right": 
-	        	
+	        	topLeftX = sourceImage.getWidth() - watermarkImage.getWidth() - 10;
+	        	topLeftY = sourceImage.getHeight() - watermarkImage.getHeight() - 10;
 	        	break;
 	        
 	        }
