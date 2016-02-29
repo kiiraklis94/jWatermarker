@@ -1,5 +1,6 @@
 package jWatermark;
 
+import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -9,10 +10,14 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
+
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
@@ -23,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import java.awt.Font;
+import java.awt.Graphics2D;
 
 public class MainWindow {
 
@@ -32,6 +38,7 @@ public class MainWindow {
 	private JTextField outputTextField;
 	private JComboBox watermarkPosComboBox;
 	private JSlider opacitySlider;
+	private File[] inputFiles;
 
 	/**
 	 * Launch the application.
@@ -177,7 +184,7 @@ public class MainWindow {
 		gbc_separator_1.gridy = 5;
 		frmJwatermark.getContentPane().add(separator_1, gbc_separator_1);
 		
-		JLabel lblOutputFolder = new JLabel("Output Folder:");
+		JLabel lblOutputFolder = new JLabel("Save as:");
 		lblOutputFolder.setVerticalAlignment(SwingConstants.BOTTOM);
 		GridBagConstraints gbc_lblOutputFolder = new GridBagConstraints();
 		gbc_lblOutputFolder.fill = GridBagConstraints.BOTH;
@@ -305,10 +312,10 @@ public class MainWindow {
 		int returnVal = fc.showOpenDialog(null);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File[] file = fc.getSelectedFiles();
+			inputFiles = fc.getSelectedFiles();
 			inputTextArea.setText("");
-				for(int i=0;i<=file.length-1;i++){
-					inputTextArea.append(file[i].getPath() + "\n");
+				for(int i=0;i<=inputFiles.length-1;i++){
+					inputTextArea.append(inputFiles[i].getPath() + "\n");
 				}
 		}
 	}
@@ -316,6 +323,10 @@ public class MainWindow {
 	public void watermarkBrowsePressed(){
 		
 		final JFileChooser fc = new JFileChooser();
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "png");
+		fc.setFileFilter(filter);
+		
 		int returnVal = fc.showOpenDialog(null);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -328,7 +339,11 @@ public class MainWindow {
 		
 		final JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = fc.showOpenDialog(null);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "png");
+		fc.setFileFilter(filter);
+		
+		int returnVal = fc.showSaveDialog(null);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
@@ -338,7 +353,10 @@ public class MainWindow {
 	}
 	
 	public void applyButtonPressed(){
-		String[] inputs =  inputTextArea.getText().split("\\n");
+		
+//		File[] inputFile = null;
+		
+//		String[] input =  inputTextArea.getText().split("\n");
 		
 		String watermark = watermarkTextField.getText();
 		
@@ -346,12 +364,88 @@ public class MainWindow {
 		
 		String position = (String) watermarkPosComboBox.getSelectedItem();
 		
-		int oppasity = opacitySlider.getValue();
+		int opacity = opacitySlider.getValue();
 		
-//		System.out.println(position +","+ oppasity);
+		
+		File watermarkFile = new File(watermark);
+		
+		for(int i=0; i<=inputFiles.length-1;i++){
+			
+			File inputFile = inputFiles[i];
+			
+			File outputFile = new File(output + "\\" + inputFile.getName().toString().substring(0, inputFile.getName().toString().lastIndexOf('.')) +"_watermarked.png");
+			
+			addWatermark(watermarkFile, inputFile, outputFile, opacity, position);
+		}
 		
 	}
 	
+	static void addWatermark(File watermarkImageFile, File sourceImageFile, File destImageFile, int opacity, String position) {
+		
+		int topLeftX = 10;
+		int topLeftY = 10;
+		
+	    try {
+	        BufferedImage sourceImage = ImageIO.read(sourceImageFile);
+	        BufferedImage watermarkImage = ImageIO.read(watermarkImageFile);
+	        
+	        float opacityFlaot = (float) opacity/100;
+	 
+	        // initializes necessary graphic properties
+	        Graphics2D g2d = (Graphics2D) sourceImage.getGraphics();
+	        AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacityFlaot);
+	        g2d.setComposite(alphaChannel);
+	 
+	        switch (position){
+	        case "Top-Left": 
+	        	topLeftX = 10;
+	        	topLeftY = 10;
+	        	break;
+	        case "Top-Center": 
+	        	topLeftX = (sourceImage.getWidth() - watermarkImage.getWidth()) / 2;
+		        topLeftY = 10;
+	        	break;
+	        case "Top-Right": 
+	        	topLeftX = sourceImage.getWidth() - watermarkImage.getWidth() - 10;
+	        	topLeftY = 10;
+	        	break;
+	        case "Middle-Left": 
+	        	topLeftX = 10;
+	        	topLeftY = (sourceImage.getHeight() - watermarkImage.getHeight()) / 2;
+	        	break;
+	        case "Middle-Center": 
+	        	topLeftX = (sourceImage.getWidth() - watermarkImage.getWidth()) / 2;
+		        topLeftY = (sourceImage.getHeight() - watermarkImage.getHeight()) / 2;
+	        	break;
+	        case "Middle-Right": 
+	        	topLeftX = sourceImage.getWidth() - watermarkImage.getWidth() - 10;
+	        	topLeftY = (sourceImage.getHeight() - watermarkImage.getHeight()) / 2;
+	        	break;
+	        case "Bottom-Left": 
+	        	
+	        	break;
+	        case "Bottom-Center": 
+	        	
+	        	break;
+	        case "Bottom-Right": 
+	        	
+	        	break;
+	        
+	        }
+	 
+	        // paints the image watermark
+	        g2d.drawImage(watermarkImage, topLeftX, topLeftY, null);
+	 
+	        
+	        ImageIO.write(sourceImage, "png", destImageFile);
+	        g2d.dispose();
+	 
+	        System.out.println("The image watermark is added to the image.");
+	 
+	    } catch (IOException ex) {
+	        System.err.println(ex);
+	    }
+	}
 	
 	
 	
