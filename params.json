@@ -1,6 +1,6 @@
 {
   "name": "Jwatermarker",
-  "tagline": "A Java written application that watermarks a bunch of pictures at the same time",
+  "tagline": "A Java application that watermarks a bunch of pictures at the same time",
   "body": "# jWatermarker\r\n\r\nThis is little project that I wanted to do so I can learn some new things. Mainly, I wanted to start using different layouts in Swing, so the application window would resize properly. \r\n\r\nWhat the application does is add a watermark (logo, or any image) to as many pictures as you want. You specify the pictures that you want watermarked, the watermark itself, the output folder, the opacity of the watermark and the position on the image and it does its magic, watermarking all the specified pictures in one swoop.\r\n\r\nThe output files are saved as: original image filename_watermarked.png.\r\n\r\n# Download executable (.jar file) [here](https://github.com/kiiraklis94/jWatermarker/releases/download/alpha/jWatermarker.jar)",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
